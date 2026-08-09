@@ -1,0 +1,56 @@
+name: islamic_app
+description: "A comprehensive Islamic application for Prayer times, Quran, and Adhkar."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.6.1
+  geolocator: ^14.0.3
+  adhan: ^2.0.0+1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.5.5
+  responsive_builder: ^0.7.1
+  google_fonts: ^8.2.1
+  intl: ^0.20.3
+  flutter_local_notifications: ^22.3.0
+  timezone: ^0.11.1
+  audioplayers: ^6.8.1
+  flutter_compass: ^0.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+
+  # تعريف مجلدات الموارد (Assets)
+  assets:
+    - assets/json/
+    - assets/images/
+
+  # تعريف الخطوط العربية
+  fonts:
+    - family: Uthmanic
+      fonts:
+        - asset: assets/fonts/Uthmanic.ttf
+
+# ==========================================
+# إعدادات الأيقونة (يجب أن تكون هنا في النهاية وخارج قسم flutter)
+# ==========================================
+flutter_launcher_icons:
+  image_path: "assets/images/app_icon.png"
+  android: true
+  ios: true
+  web:
+    generate: true
