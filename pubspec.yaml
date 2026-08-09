@@ -2,10 +2,8 @@ name: islamic_app
 description: "A comprehensive Islamic application for Prayer times, Quran, and Adhkar."
 publish_to: 'none'
 version: 1.0.0+1
-
 environment:
-  sdk: ^3.12.0
-
+  sdk: ">=3.0.0 <4.0.0"
 dependencies:
   flutter:
     sdk: flutter
