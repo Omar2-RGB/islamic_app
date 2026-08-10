@@ -21,6 +21,57 @@ class _MainScreenState extends State<MainScreen> {
     const ToolsScreen(), // شاشة الأدوات التي تضم باقي الميزات
   ];
 
+  // دالة لإظهار نافذة حقوق التطبيق
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            'حول التطبيق',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.mosque, size: 50, color: Colors.teal),
+              SizedBox(height: 15),
+              Text(
+                'تطبيق سَنَا الإسلامي',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'جميع الحقوق محفوظة © 2026\n\nتم التطوير والبرمجة بواسطة:\nالمهندس عمر الشعلان عبدالعزيز',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.teal.shade50,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text('إغلاق', style: TextStyle(color: Colors.teal, fontSize: 16)),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +88,12 @@ class _MainScreenState extends State<MainScreen> {
         centerTitle: true,
         backgroundColor: Colors.teal.shade50,
         elevation: 0,
+        // إضافة أيقونة الحقوق هنا في يسار الشاشة
+        leading: IconButton(
+          icon: const Icon(Icons.info_outline, color: Colors.teal),
+          tooltip: 'حول التطبيق',
+          onPressed: () => _showAboutDialog(context),
+        ),
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
