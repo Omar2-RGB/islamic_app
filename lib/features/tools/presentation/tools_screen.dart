@@ -12,18 +12,22 @@ class ToolsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 💡 الألوان الداكنة الثابتة للتطبيق
+    final Color bgColor = const Color(0xFF0D1818);
+    final Color cardColor = const Color(0xFF162224);
+    final Color goldColor = const Color(0xFFD4AF37);
+
     final List<Map<String, dynamic>> tools = [
       {'title': 'المسبحة الإلكترونية', 'icon': Icons.pin, 'screen': const TasbihScreen()},
       {'title': 'اتجاه القبلة', 'icon': Icons.explore, 'screen': const QiblaScreen()},
       {'title': 'أسماء الله الحسنى', 'icon': Icons.auto_awesome, 'screen': const NamesScreen()},
       {'title': 'الأربعين النووية', 'icon': Icons.menu_book_rounded, 'screen': const HadithScreen()},
       {'title': 'مخطط الختمة', 'icon': Icons.insights, 'screen': const KhatmahScreen()},
-      {'title': 'التقويم الهجري', 'icon': Icons.calendar_month, 'screen': const CalendarScreen()},
       {'title': 'مكتبة الأدعية', 'icon': Icons.menu_book, 'screen': const DuaaScreen()},
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF7F2),
+      backgroundColor: bgColor, // تغيير لون الخلفية
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,21 +49,14 @@ class ToolsScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: cardColor, // تغيير لون البطاقة
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.teal.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-                border: Border.all(color: Colors.teal.shade100, width: 1),
+                border: Border.all(color: Colors.white.withOpacity(0.05), width: 1), // إطار خفيف جداً
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(tool['icon'], size: 40, color: Colors.teal),
+                  Icon(tool['icon'], size: 40, color: goldColor), // الأيقونة باللون الذهبي
                   const SizedBox(height: 12),
                   Text(
                     tool['title'],
@@ -67,7 +64,7 @@ class ToolsScreen extends StatelessWidget {
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Uthmanic',
-                      color: Colors.teal,
+                      color: Colors.white, // النص باللون الأبيض
                     ),
                     textAlign: TextAlign.center,
                   ),

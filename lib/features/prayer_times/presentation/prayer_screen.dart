@@ -8,6 +8,12 @@ import 'package:intl/intl.dart' hide TextDirection;
 
 import 'prayer_provider.dart';
 import '../../../core/services/notification_service.dart';
+
+// الألوان الداكنة الثابتة للتطبيق
+const Color bgColor = Color(0xFF0D1818);
+const Color cardColor = Color(0xFF162224);
+const Color goldColor = Color(0xFFD4AF37);
+
 class PrayerScreen extends ConsumerWidget {
   const PrayerScreen({super.key});
 
@@ -16,12 +22,15 @@ class PrayerScreen extends ConsumerWidget {
     final prayerTimesAsyncValue = ref.watch(prayerTimesProvider);
 
     return Scaffold(
+      backgroundColor: bgColor, // تغيير لون الخلفية
       body: prayerTimesAsyncValue.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('حدث خطأ: $error')),
+        loading: () => const Center(child: CircularProgressIndicator(color: goldColor)),
+        error: (error, stack) => Center(child: Text('حدث خطأ: $error', style: const TextStyle(color: Colors.red))),
         data: (prayerTimes) {
           if (prayerTimes == null) {
-            return const Center(child: Text('يرجى تفعيل الموقع لمعرفة أوقات الصلاة.'));
+            return const Center(
+              child: Text('يرجى تفعيل الموقع لمعرفة أوقات الصلاة.', style: TextStyle(color: Colors.white, fontSize: 16))
+            );
           }
 
           String formatTime(DateTime time) {
@@ -30,17 +39,18 @@ class PrayerScreen extends ConsumerWidget {
 
           return ListView(
             padding: const EdgeInsets.all(16.0),
+            physics: const BouncingScrollPhysics(),
             children: [
               // العداد التنازلي للصلاة القادمة
               _NextPrayerCountdown(prayerTimes: prayerTimes),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
               const Text(
                 'أوقات الصلاة',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: goldColor, fontFamily: 'Uthmanic'),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
 
               _PrayerTile(id: 1, title: 'الفجر', timeString: formatTime(prayerTimes.fajr), dateTime: prayerTimes.fajr),
               _PrayerTile(id: 2, title: 'الشروق', timeString: formatTime(prayerTimes.sunrise), dateTime: prayerTimes.sunrise),
@@ -138,11 +148,11 @@ class _NextPrayerCountdownState extends State<_NextPrayerCountdown> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.teal.shade50,
+      color: cardColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.teal.shade200, width: 1.5),
+        side: BorderSide(color: goldColor.withOpacity(0.5), width: 1.5), // إطار ذهبي خفيف
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
@@ -150,9 +160,10 @@ class _NextPrayerCountdownState extends State<_NextPrayerCountdown> {
           children: [
             Text(
               'الوقت المتبقي لصلاة $_nextPrayerName',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
-                color: Colors.teal.shade800,
+                color: Colors.white,
+                fontFamily: 'Uthmanic',
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -162,10 +173,10 @@ class _NextPrayerCountdownState extends State<_NextPrayerCountdown> {
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.bold,
-                color: Colors.teal,
-                letterSpacing: 2.0, // تباعد بين الأرقام لتبدو كالساعة الرقمية
+                color: goldColor, // الأرقام باللون الذهبي
+                letterSpacing: 2.0, 
               ),
-              textDirection: TextDirection.ltr, // لإجبار الأرقام على البقاء من اليسار لليمين
+              textDirection: TextDirection.ltr, 
             ),
           ],
         ),
@@ -175,7 +186,7 @@ class _NextPrayerCountdownState extends State<_NextPrayerCountdown> {
 }
 
 // ---------------------------------------------------------
-// ويدجت تصميم سطر الصلاة مع زر الأذان (لم تتغير)
+// ويدجت تصميم سطر الصلاة مع زر الأذان
 // ---------------------------------------------------------
 class _PrayerTile extends StatefulWidget {
   final int id;
@@ -212,18 +223,22 @@ class _PrayerTileState extends State<_PrayerTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      color: cardColor, // لون البطاقة الداكن
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.white.withOpacity(0.05)), // إطار خفيف جداً
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        subtitle: Text(widget.timeString, style: const TextStyle(fontSize: 16, color: Colors.teal, fontWeight: FontWeight.w600)),
+        title: Text(widget.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+        subtitle: Text(widget.timeString, style: const TextStyle(fontSize: 16, color: goldColor, fontWeight: FontWeight.w600)),
         trailing: IconButton(
           iconSize: 28,
           icon: Icon(
             isAthanEnabled ? Icons.volume_up : Icons.volume_off,
-            color: isAthanEnabled ? Colors.teal : Colors.grey,
+            color: isAthanEnabled ? goldColor : Colors.grey.shade600, // لون أيقونة الصوت
           ),
           onPressed: () {
             setState(() {
@@ -243,7 +258,16 @@ class _PrayerTileState extends State<_PrayerTile> {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(isAthanEnabled ? 'تم تفعيل الأذان لصلاة ${widget.title}' : 'تم كتم الأذان لصلاة ${widget.title}'),
+                backgroundColor: bgColor, // لون التنبيه متناسق
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(color: goldColor, width: 1),
+                ),
+                content: Text(
+                  isAthanEnabled ? 'تم تفعيل الأذان لصلاة ${widget.title}' : 'تم كتم الأذان لصلاة ${widget.title}',
+                  style: const TextStyle(color: Colors.white, fontFamily: 'Uthmanic', fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
                 duration: const Duration(seconds: 2),
                 behavior: SnackBarBehavior.floating,
               ),

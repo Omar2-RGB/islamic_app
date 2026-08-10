@@ -7,11 +7,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  http: ^1.1.0
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   geolocator: ^14.0.3
+  geocoding: ^3.0.0     # لتحويل خطوط الطول والعرض إلى اسم المدينة
   adhan: ^2.0.0+1
+  hijri: ^3.0.0         # لتحويل وعرض التاريخ الهجري
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   shared_preferences: ^2.5.5
@@ -36,7 +38,7 @@ flutter:
   assets:
     - assets/json/
     - assets/images/
-
+    - assets/images/mosque_bg.jpg
   # تعريف الخطوط العربية
   fonts:
     - family: Uthmanic

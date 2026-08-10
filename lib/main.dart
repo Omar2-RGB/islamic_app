@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'features/settings/presentation/main_screen.dart';
 import 'core/services/notification_service.dart';
+
 void main() async {
   // التأكد من تهيئة فلاتر قبل تشغيل أي شيء
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +11,9 @@ void main() async {
   // تهيئة قاعدة البيانات المحلية Hive
   await Hive.initFlutter();
   // لاحقاً سنقوم بفتح الـ Boxes هنا
-await NotificationService.init();
+  await Hive.openBox('khatmahBox');
+  await NotificationService.init();
+  
   runApp(
     // تغليف التطبيق بـ ProviderScope لكي يعمل Riverpod
     const ProviderScope(
@@ -24,15 +27,28 @@ class IslamicApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 💡 تم إضافة كلمة return هنا لحل المشكلة
     return MaterialApp(
-      title: 'سَنَا',
       debugShowCheckedModeBanner: false,
+      title: 'تطبيق سُنّة',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal, // اللون الأساسي للتطبيق (أخضر مزرق)
+        scaffoldBackgroundColor: const Color(0xFF0D1818), // لون الخلفية لكل الشاشات
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF0D1818), // لون الـ AppBar في كل الشاشات
+          elevation: 0, // إزالة الظل
+          iconTheme: IconThemeData(color: Colors.white), // لون أيقونات العودة
+          titleTextStyle: TextStyle(
+            color: Color(0xFFD4AF37), // لون العنوان الذهبي
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        useMaterial3: true,
-        fontFamily: 'Uthmanic', // الخط الذي سيتم تطبيقه على التطبيق بالكامل
+        // لون النص الافتراضي ليكون أبيض بدلاً من الأسود
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       home: const MainScreen(),
     );

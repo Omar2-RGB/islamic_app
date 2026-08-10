@@ -130,6 +130,11 @@ class QuranScreen extends ConsumerStatefulWidget {
 class _QuranScreenState extends ConsumerState<QuranScreen> {
   List<Map<String, dynamic>> _filteredSurahs = _quranIndex;
 
+  // الألوان الداكنة الثابتة
+  final Color bgColor = const Color(0xFF0D1818);
+  final Color cardColor = const Color(0xFF162224);
+  final Color goldColor = const Color(0xFFD4AF37);
+
   void _runFilter(String enteredKeyword) {
     List<Map<String, dynamic>> results = [];
     if (enteredKeyword.isEmpty) {
@@ -145,26 +150,29 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('فهرس القرآن الكريم', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('فهرس القرآن الكريم', style: TextStyle(fontWeight: FontWeight.bold, color: goldColor)),
         centerTitle: true,
-        backgroundColor: Colors.teal.shade50,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              style: const TextStyle(color: Colors.white), // لون النص أثناء الكتابة
               onChanged: (value) => _runFilter(value),
               decoration: InputDecoration(
                 hintText: 'ابحث عن سورة...',
-                prefixIcon: const Icon(Icons.search, color: Colors.teal),
+                hintStyle: TextStyle(color: Colors.grey.shade400),
+                prefixIcon: Icon(Icons.search, color: goldColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: cardColor, // لون خلفية حقل البحث
               ),
             ),
           ),
@@ -172,7 +180,7 @@ class _QuranScreenState extends ConsumerState<QuranScreen> {
       ),
       body: ListView.separated(
         itemCount: _filteredSurahs.length,
-        separatorBuilder: (context, index) => const Divider(height: 1, color: Colors.black12),
+        separatorBuilder: (context, index) => Divider(height: 1, color: Colors.white.withOpacity(0.05)), // خط فاصل خفيف جداً
         itemBuilder: (context, index) {
           final surah = _filteredSurahs[index];
           return _SurahTile(surah: surah);
@@ -189,6 +197,9 @@ class _SurahTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color cardColor = const Color(0xFF162224);
+    final Color goldColor = const Color(0xFFD4AF37);
+
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -206,14 +217,14 @@ class _SurahTile extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Colors.teal.shade50,
+                color: cardColor, // لون الدائرة الداكن
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.teal, width: 1.5),
+                border: Border.all(color: goldColor, width: 1.5), // إطار ذهبي للدائرة
               ),
               alignment: Alignment.center,
               child: Text(
                 '${surah['id']}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.teal),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: goldColor), // الرقم بالذهبي
               ),
             ),
             const SizedBox(width: 16),
@@ -223,23 +234,23 @@ class _SurahTile extends StatelessWidget {
                 children: [
                   Text(
                     surah['englishName'],
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white), // النص باللون الأبيض
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${surah['type']} • ${surah['ayahs']} آية',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                   ),
                 ],
               ),
             ),
             Text(
               surah['name'],
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Uthmanic',
-                color: Colors.teal,
+                color: goldColor, // اسم السورة بالعربي باللون الذهبي
               ),
             ),
           ],

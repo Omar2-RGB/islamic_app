@@ -13,6 +13,11 @@ class _NamesScreenState extends State<NamesScreen> {
   List<dynamic> _names = [];
   bool _isLoading = true;
 
+  // الألوان الداكنة الثابتة
+  final Color bgColor = const Color(0xFF0D1818);
+  final Color cardColor = const Color(0xFF162224);
+  final Color goldColor = const Color(0xFFD4AF37);
+
   @override
   void initState() {
     super.initState();
@@ -44,21 +49,21 @@ class _NamesScreenState extends State<NamesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAF7F2),
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('أسماء الله الحسنى', style: TextStyle(fontFamily: 'Uthmanic', color: Colors.teal)),
+        title: Text('أسماء الله الحسنى', style: TextStyle(fontFamily: 'Uthmanic', color: goldColor, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.teal.shade50,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.teal),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.teal))
+          ? Center(child: CircularProgressIndicator(color: goldColor))
           : _names.isEmpty
-              ? const Center(child: Text('لا توجد بيانات متاحة'))
+              ? const Center(child: Text('لا توجد بيانات متاحة', style: TextStyle(color: Colors.white)))
               : GridView.builder(
                   padding: const EdgeInsets.all(12),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -71,7 +76,7 @@ class _NamesScreenState extends State<NamesScreen> {
                   itemBuilder: (context, index) {
                     final item = _names[index];
                     
-                    // استخراج المعنى بأمان تامة لتجنب الـ null
+                    // استخراج المعنى بأمان تام لتجنب الـ null
                     String meaningText = '';
                     if (item['en'] != null && item['en']['meaning'] != null) {
                       meaningText = item['en']['meaning'];
@@ -80,8 +85,12 @@ class _NamesScreenState extends State<NamesScreen> {
                     }
 
                     return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      color: cardColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: Colors.white.withOpacity(0.05)), // إطار خفيف جداً
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -89,17 +98,17 @@ class _NamesScreenState extends State<NamesScreen> {
                           children: [
                             Text(
                               '${item['number'] ?? (index + 1)}',
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              style: TextStyle(fontSize: 12, color: goldColor.withOpacity(0.8)),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               item['name'] ?? '',
-                              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'Uthmanic', color: Colors.teal),
+                              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'Uthmanic', color: goldColor),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               meaningText,
-                              style: const TextStyle(fontSize: 12, color: Colors.black54),
+                              style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,

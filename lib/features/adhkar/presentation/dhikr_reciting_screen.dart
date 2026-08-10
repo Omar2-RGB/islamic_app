@@ -14,6 +14,11 @@ class _DhikrRecitingScreenState extends State<DhikrRecitingScreen> {
   int _currentIndex = 0;
   int _currentCount = 0;
 
+  // الألوان الداكنة الثابتة للتطبيق
+  final Color bgColor = const Color(0xFF0D1818);
+  final Color cardColor = const Color(0xFF162224);
+  final Color goldColor = const Color(0xFFD4AF37);
+
   void _increment() {
     HapticFeedback.lightImpact();
     setState(() {
@@ -25,16 +30,25 @@ class _DhikrRecitingScreenState extends State<DhikrRecitingScreen> {
         } else {
           showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (context) => AlertDialog(
-              title: const Text('أحسنت!'),
-              content: const Text('لقد أتممت أذكار هذه الفئة بنجاح تقبل الله طاعتك.'),
+              backgroundColor: cardColor, // لون خلفية النافذة
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: goldColor.withOpacity(0.5)), // إطار ذهبي
+              ),
+              title: Text('أحسنت!', style: TextStyle(color: goldColor, fontWeight: FontWeight.bold)),
+              content: const Text(
+                'لقد أتممت أذكار هذه الفئة بنجاح، تقبل الله طاعتك.',
+                style: TextStyle(color: Colors.white, fontSize: 16, height: 1.5),
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
-                  child: const Text('حسناً'),
+                  child: Text('حسناً', style: TextStyle(color: goldColor, fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -49,12 +63,20 @@ class _DhikrRecitingScreenState extends State<DhikrRecitingScreen> {
     final dhikr = widget.category.items[_currentIndex];
 
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(widget.category.category),
+        title: Text(
+          widget.category.category,
+          style: TextStyle(fontFamily: 'Uthmanic', color: goldColor, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.teal.shade50,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      backgroundColor: const Color(0xFFFAF7F2),
       // استخدام SingleChildScrollView لمنع الـ Overflow نهائياً
       body: SafeArea(
         child: SingleChildScrollView(
@@ -64,37 +86,47 @@ class _DhikrRecitingScreenState extends State<DhikrRecitingScreen> {
             children: [
               Text(
                 'الذكر ${_currentIndex + 1} من ${widget.category.items.length}',
-                style: const TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: Colors.grey.shade400),
               ),
               const SizedBox(height: 20),
               
               Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                color: cardColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(color: Colors.white.withOpacity(0.05)),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
                     dhikr.text,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20, height: 1.8, color: Colors.black87),
+                    style: const TextStyle(
+                      fontSize: 22, 
+                      height: 1.8, 
+                      color: Colors.white, 
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
 
               Text(
                 "العدد: $_currentCount / ${dhikr.count}",
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: goldColor),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
 
               SizedBox(
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 child: FloatingActionButton.large(
                   onPressed: _increment,
-                  backgroundColor: Colors.teal,
-                  child: const Icon(Icons.touch_app, size: 40, color: Colors.white),
+                  backgroundColor: goldColor,
+                  elevation: 0,
+                  child: Icon(Icons.touch_app, size: 50, color: bgColor), // الأيقونة بلون الخلفية
                 ),
               ),
             ],
