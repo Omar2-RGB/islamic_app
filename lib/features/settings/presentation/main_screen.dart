@@ -107,8 +107,7 @@ class _MainScreenState extends State<MainScreen> {
       case Prayer.none: return "";
     }
   }
-
-  Future<void> _fetchLocationAndPrayerTimes() async {
+Future<void> _fetchLocationAndPrayerTimes() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -150,13 +149,19 @@ class _MainScreenState extends State<MainScreen> {
           setState(() => _currentLocation = "تعذر تحديد المدينة (الويب)");
         }
       } else {
-     List<Placemark> placemarks = await Geocoding().placemarkFromCoordinates(
-    position.latitude, position.longitude);
-        if (placemarks.isNotEmpty) {
-          setState(() {
-            _currentLocation = placemarks.first.locality ?? placemarks.first.country ?? "موقع غير معروف";
-            countryName = placemarks.first.country ?? "";
-          });
+        // 📱 الطريقة الآمنة لاستخراج اسم المدينة في الإصدارات الحديثة
+        try {
+          List<Location> locations = []; // توافق إضافي إذا لزم
+          var placemarks = await placemarkFromCoordinates(
+              position.latitude, position.longitude);
+          if (placemarks.isNotEmpty) {
+            setState(() {
+              _currentLocation = placemarks.first.locality ?? placemarks.first.country ?? "موقع غير معروف";
+              countryName = placemarks.first.country ?? "";
+            });
+          }
+        } catch (_) {
+          setState(() => _currentLocation = "موقع غير معروف");
         }
       }
     } catch (e) {
