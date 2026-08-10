@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               SizedBox(height: 10),
               Text(
-                'جميع الحقوق محفوظة © 2026\n\nتم التطوير والبرمجة بواسطة:\nالمهندس عمر الشعلان عبدالعزيز',
+                'جميع الحقوق محفوظة © 2026\n\nتم التطوير والبرمجة بواسطة:\nالمهندس عمر شعلان عبدالعزيز',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, height: 1.5, color: Colors.black87),
               ),
