@@ -6,7 +6,7 @@ import 'package:adhan/adhan.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart'; // ضرورية لاستخدام kIsWeb
+import 'package:flutter/foundation.dart';
 import '../../prayer_times/presentation/prayer_screen.dart';
 import '../../quran/presentation/quran_screen.dart';
 import '../../adhkar/presentation/adhkar_screen.dart';
@@ -133,7 +133,7 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
     String countryName = ""; 
     try {
       if (kIsWeb) {
@@ -209,7 +209,6 @@ class _MainScreenState extends State<MainScreen> {
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  // 💡 نافذة "حول التطبيق" مع الحقوق والدعاء للوالدين
   void _showAboutDialog(BuildContext context) {
     showDialog(
       context: context,
