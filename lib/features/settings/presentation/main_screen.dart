@@ -150,8 +150,8 @@ class _MainScreenState extends State<MainScreen> {
           setState(() => _currentLocation = "تعذر تحديد المدينة (الويب)");
         }
       } else {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-            position.latitude, position.longitude);
+     List<Placemark> placemarks = await Geocoding().placemarkFromCoordinates(
+    position.latitude, position.longitude);
         if (placemarks.isNotEmpty) {
           setState(() {
             _currentLocation = placemarks.first.locality ?? placemarks.first.country ?? "موقع غير معروف";
