@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.islamic_app"
-    compileSdk = 34 // 💡 تم التعديل هنا لفرض الإصدار 34 لتوافق المكتبات
+    compileSdk = 35 // 💡 تم التعديل هنا لفرض الإصدار 34 لتوافق المكتبات
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "com.example.islamic_app"
         minSdk = flutter.minSdkVersion
-        targetSdk = 34 // 💡 تم التعديل هنا أيضاً ليطابق الـ compileSdk
+        targetSdk = 35 // 💡 تم التعديل هنا أيضاً ليطابق الـ compileSdk
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
