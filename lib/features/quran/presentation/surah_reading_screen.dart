@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/gestures.dart';
 import 'quran_provider.dart';
+import 'package:islamic_app/core/services/tafsir_service.dart';
 
 class SurahReadingScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> surahInfo;
@@ -58,6 +60,91 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen> {
     return numStr;
   }
 
+  void _showTafsirBottomSheet(BuildContext context, int suraId, dynamic ayah) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(
+        child: CircularProgressIndicator(color: Colors.teal),
+      ),
+    );
+
+    String tafsirText = await TafsirService.getAyahTafsir(suraId, ayah.verse);
+
+    if (mounted) {
+      Navigator.pop(context); // إغلاق دائرة التحميل
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: const Color(0xFFF9F4E8),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  "تفسير الآية (${_toArabicNumber(ayah.verse)}) - سورة ${widget.surahInfo['name']}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.teal,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  ayah.text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontFamily: 'Uthmanic',
+                    fontSize: 22,
+                    color: Colors.black87,
+                  ),
+                ),
+                const Divider(height: 25, thickness: 1),
+                SingleChildScrollView(
+                  child: Text(
+                    tafsirText,
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      height: 1.6,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('إغلاق', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final surahId = widget.surahInfo['id'] as int;
@@ -111,7 +198,7 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen> {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 25),
                   child: Text(
-                    "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+                    "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
                     style: TextStyle(fontFamily: 'Uthmanic', fontSize: 28, color: Colors.black87),
                   ),
                 ),
@@ -128,6 +215,10 @@ class _SurahReadingScreenState extends ConsumerState<SurahReadingScreen> {
                           height: 2.8,
                           color: Colors.black87,
                         ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            _showTafsirBottomSheet(context, surahId, ayah);
+                          },
                       );
                     }).toList(),
                   ),
