@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:adhan/adhan.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'dart:convert';
@@ -107,7 +106,8 @@ class _MainScreenState extends State<MainScreen> {
       case Prayer.none: return "";
     }
   }
-Future<void> _fetchLocationAndPrayerTimes() async {
+
+  Future<void> _fetchLocationAndPrayerTimes() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -133,36 +133,20 @@ Future<void> _fetchLocationAndPrayerTimes() async {
 
     Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.high));
+    
     String countryName = ""; 
     try {
-      if (kIsWeb) {
-        final url = Uri.parse('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.latitude}&longitude=${position.longitude}&localityLanguage=ar');
-        final response = await http.get(url);
-        
-        if (response.statusCode == 200) {
-          final data = json.decode(response.body);
-          setState(() {
-            _currentLocation = data['city'] ?? data['locality'] ?? data['principalSubdivision'] ?? "موقع غير معروف";
-            countryName = data['countryName'] ?? "";
-          });
-        } else {
-          setState(() => _currentLocation = "تعذر تحديد المدينة (الويب)");
-        }
+      final url = Uri.parse('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.latitude}&longitude=${position.longitude}&localityLanguage=ar');
+      final response = await http.get(url);
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _currentLocation = data['city'] ?? data['locality'] ?? data['principalSubdivision'] ?? "موقع غير معروف";
+          countryName = data['countryName'] ?? "";
+        });
       } else {
-        // 📱 الطريقة الآمنة لاستخراج اسم المدينة في الإصدارات الحديثة
-        try {
-          List<Location> locations = []; // توافق إضافي إذا لزم
-          var placemarks = await placemarkFromCoordinates(
-              position.latitude, position.longitude);
-          if (placemarks.isNotEmpty) {
-            setState(() {
-              _currentLocation = placemarks.first.locality ?? placemarks.first.country ?? "موقع غير معروف";
-              countryName = placemarks.first.country ?? "";
-            });
-          }
-        } catch (_) {
-          setState(() => _currentLocation = "موقع غير معروف");
-        }
+        setState(() => _currentLocation = "موقع غير معروف");
       }
     } catch (e) {
       setState(() => _currentLocation = "تعذر تحديد المدينة");
