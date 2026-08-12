@@ -23,18 +23,18 @@ class PrayerScreen extends ConsumerStatefulWidget {
 }
 
 class _PrayerScreenState extends ConsumerState<PrayerScreen> {
-  // 💡 2. إنشاء كائن تشغيل الصوت عالمياً للشاشة
+  // 💡 2. إنشاء كائن تشغيل الصوت عالمياً للشاشة للتحكم فيه من مكان واحد
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlayingAthan = false; // حالة التشغيل الحالية
 
   @override
   void dispose() {
-    // 💡 3. تحرير كائن الصوت عند إغلاق الشاشة لتوفير الموارد
+    // 💡 3. تحرير كائن الصوت عند إغلاق الشاشة لتوفير موارد الجهاز
     _audioPlayer.dispose();
     super.dispose();
   }
 
-  // 💡 4. دالة لتشغيل أو إيقاف صوت الأذان تجريبياً
+  // 💡 4. دالة لتشغيل أو إيقاف صوت الأذان تجريبياً عند طلب الأبناء
   Future<void> _playTestAdhan() async {
     try {
       if (_isPlayingAthan) {
@@ -104,8 +104,8 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
                 title: 'الفجر',
                 timeString: formatTime(prayerTimes.fajr),
                 dateTime: prayerTimes.fajr,
-                isPlayingAthan: _isPlayingAthan, // تمرير حالة التشغيل
-                onPlayTest: _playTestAdhan, // تمرير دالة التشغيل
+                isPlayingAthan: _isPlayingAthan, // تمرير حالة التشغيل الحالية
+                onPlayTest: _playTestAdhan, // تمرير الدالة لتنفيذها عند الضغط
               ),
               _PrayerTile(
                 id: 2,
@@ -114,7 +114,7 @@ class _PrayerScreenState extends ConsumerState<PrayerScreen> {
                 dateTime: prayerTimes.sunrise,
                 isPlayingAthan: _isPlayingAthan,
                 onPlayTest: _playTestAdhan,
-                isSunrise: true, // الشروق لا أذان له برمجياً
+                isSunrise: true, // تمييز الشروق لأنه لا أذان له
               ),
               _PrayerTile(
                 id: 3,
@@ -284,8 +284,8 @@ class _PrayerTile extends StatefulWidget {
   final String title;
   final String timeString;
   final DateTime dateTime;
-  final bool isPlayingAthan; // 💡 تمرير حالة التشغيل من الأب
-  final VoidCallback onPlayTest; // 💡 تمرير دالة التشغيل من الأب
+  final bool isPlayingAthan; // 💡 استقبال حالة التشغيل من الأب
+  final VoidCallback onPlayTest; // 💡 استقبال دالة التشغيل من الأب
   final bool isSunrise; // تمييز الشروق
 
   const _PrayerTile({
@@ -346,7 +346,7 @@ class _PrayerTileState extends State<_PrayerTile> {
             if (isAthanEnabled == false && widget.isSunrise == false)
               IconButton(
                 visualDensity: VisualDensity.compact,
-                // تغيير الأيقونة عالمياً بناءً على حالة التشغيل في الشاشة
+                // تغيير الأيقونة بناءً على حالة التشغيل الممرة من الأب
                 icon: Icon(
                   widget.isPlayingAthan ? Icons.stop_circle_outlined : Icons.play_circle_outline_rounded,
                   color: widget.isPlayingAthan ? Colors.red.withValues(alpha: 0.7) : goldColor.withValues(alpha: 0.7),
