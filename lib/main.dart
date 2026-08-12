@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+// 💡 1. استيراد الملف اللازم لتهيئة بيانات اللغة
+import 'package:intl/date_symbol_data_local.dart'; 
 import 'features/settings/presentation/main_screen.dart';
 import 'core/services/notification_service.dart';
 
@@ -8,6 +10,10 @@ void main() async {
   // التأكد من تهيئة فلاتر قبل تشغيل أي شيء
   WidgetsFlutterBinding.ensureInitialized();
   
+  // 💡 2. تهيئة بيانات تنسيق التاريخ والوقت للغة العربية
+  // هذا السطر ضروري جداً لكي يعمل التنسيق بـ 'ar' دون خطأ
+  await initializeDateFormatting('ar', null);
+
   // تهيئة قاعدة البيانات المحلية Hive
   await Hive.initFlutter();
   // لاحقاً سنقوم بفتح الـ Boxes هنا
@@ -27,7 +33,6 @@ class IslamicApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 💡 تم إضافة كلمة return هنا لحل المشكلة
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'تطبيق سُنّة',
