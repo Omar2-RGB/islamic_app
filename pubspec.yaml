@@ -40,8 +40,7 @@ flutter:
     - assets/json/
     - assets/images/
     - assets/images/mosque_bg.jpg
-
-  # تعريف الخطوط العربية
+    - assets/sounds/athan.mp3 # 💡 تأكد من وجود هذا السطر  # تعريف الخطوط العربية
   fonts:
     - family: Uthmanic
       fonts:
